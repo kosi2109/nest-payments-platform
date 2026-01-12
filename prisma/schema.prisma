@@ -20,3 +20,13 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Payment {
+  id             String   @id @default(cuid())
+  amount         Int
+  currency       String
+  status         String
+  provider       String
+  idempotencyKey String   @unique
+  createdAt      DateTime @default(now())
+}
