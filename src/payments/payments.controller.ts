@@ -1,9 +1,21 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
+import { ChargePaymentCommand } from './commands/charge-payment.command';
+import { GetPaymentQuery } from './queries/get-payment.query';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
 @Controller('payments')
 export class PaymentsController {
-  constructor(private readonly paymentsService: PaymentsService) {}
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Get(':id')
+  async get(@Param('id') id: string) {
+    return this.queryBus.execute(new GetPaymentQuery(id));
+  }
 
   @Post('pay')
   async pay(
@@ -15,11 +27,13 @@ export class PaymentsController {
       service: string;
     },
   ) {
-    return this.paymentsService.pay(
-      body.amount,
-      body.currency,
-      body.idempotencyKey,
-      body.service,
+    return this.commandBus.execute(
+      new ChargePaymentCommand(
+        body.amount,
+        body.currency,
+        body.service,
+        body.idempotencyKey,
+      ),
     );
   }
 

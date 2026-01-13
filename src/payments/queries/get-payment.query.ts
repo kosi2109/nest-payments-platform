@@ -1,3 +1,3 @@
-export class PaymentSucceededEvent {
+export class GetPaymentQuery {
   constructor(public readonly paymentId: string) {}
 }

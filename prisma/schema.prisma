@@ -30,3 +30,9 @@ model Payment {
   idempotencyKey String   @unique
   createdAt      DateTime @default(now())
 }
+
+model PaymentRead {
+  id        String   @id
+  status    String
+  updatedAt DateTime @updatedAt
+}
