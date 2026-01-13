@@ -10,6 +10,9 @@ import { PaymentReadProjection } from './projections/payment-read.projection';
 import { ChargePaymentHandler } from './commands/charge-payment.handler';
 import { GetPaymentHandler } from './queries/get-payment.handler';
 import { CqrsModule } from '@nestjs/cqrs';
+import { RedisProvider } from 'src/redis/redis.provider';
+import { PaymentsReadRedisRepository } from './repositories/payments-read-redis.repository';
+import { PaymentReadProvider } from './repositories/payments-read-provider';
 
 @Module({
   providers: [
@@ -19,11 +22,18 @@ import { CqrsModule } from '@nestjs/cqrs';
     KBZProvider,
 
     PaymentsWriteRepository,
-    PaymentsReadRepository,
     PaymentReadProjection,
+    {
+      provide: PaymentReadProvider,
+      useClass: PaymentsReadRedisRepository,
+    },
+    // PaymentsReadRepository,
+    // PaymentsReadRedisRepository,
 
     ChargePaymentHandler,
     GetPaymentHandler,
+
+    RedisProvider,
   ],
   controllers: [PaymentsController],
   imports: [CqrsModule],

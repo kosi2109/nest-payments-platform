@@ -36,3 +36,11 @@ model PaymentRead {
   status    String
   updatedAt DateTime @updatedAt
 }
+
+model OutboxEvent {
+  id        String   @id @default(cuid())
+  type      String
+  payload   Json
+  processed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

@@ -1,10 +1,10 @@
 import { QueryHandler } from '@nestjs/cqrs';
 import { GetPaymentQuery } from './get-payment.query';
-import { PaymentsReadRepository } from '../repositories/payments-read.repository';
+import { PaymentReadProvider } from '../repositories/payments-read-provider';
 
 @QueryHandler(GetPaymentQuery)
 export class GetPaymentHandler {
-  constructor(private readonly readRepo: PaymentsReadRepository) {}
+  constructor(private readonly readRepo: PaymentReadProvider) {}
 
   async execute(query: GetPaymentQuery) {
     return this.readRepo.findByPaymentId(query.paymentId);

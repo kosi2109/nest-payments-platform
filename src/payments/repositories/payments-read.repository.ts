@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PaymentReadProvider } from './payments-read-provider';
 
 @Injectable()
-export class PaymentsReadRepository {
+export class PaymentsReadRepository implements PaymentReadProvider {
   constructor(private readonly prisma: PrismaService) {}
 
   async upsert(data: { paymentId: string; status: string }) {
-    return this.prisma.paymentRead.upsert({
+    this.prisma.paymentRead.upsert({
       where: { id: data.paymentId },
       create: {
         id: data.paymentId,

@@ -1,10 +1,12 @@
 import { EventsHandler } from '@nestjs/cqrs';
 import { PaymentSucceededEvent } from '../events/payment-succeeded.event';
-import { PaymentsReadRepository } from '../repositories/payments-read.repository';
+import { PaymentsReadRedisRepository } from '../repositories/payments-read-redis.repository';
+import { PaymentReadProvider } from '../repositories/payments-read-provider';
 
+// event listerner
 @EventsHandler(PaymentSucceededEvent)
 export class PaymentReadProjection {
-  constructor(private readonly readRepo: PaymentsReadRepository) {}
+  constructor(private readonly readRepo: PaymentReadProvider) {}
 
   async handle(event: PaymentSucceededEvent) {
     await this.readRepo.upsert({
